@@ -1,0 +1,23 @@
+const RPC = require("discord-rpc");
+const client = new RPC.Client({ transport: "ipc" });
+client.on("ready", () => {
+  client.request("SET_ACTIVITY", {
+    pid: process.pid,
+    activity: {
+      details: "With AI Robot",
+      assets: {
+        large_image: "smart",
+      },
+      buttons: [
+        {
+          label: "invite",
+          url:
+            "https://top.gg/bot/762745762777006080",
+        },
+        { label: "support", url: "https://discord.gg/jp8et9xU56" },
+      ],
+    },
+  });
+  console.log("Started!");
+});
+client.login({ clientId: "747016238214938725" });

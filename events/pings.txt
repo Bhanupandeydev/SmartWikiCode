@@ -1,0 +1,29 @@
+const client = require("../index");
+const { Collection, MessageEmbed } = require("discord.js");
+const Pings = new Collection();
+
+client.on("message", async (message) => {
+  if(!message.member.hasPermission('ADMINISTRATOR')) return;
+  if (!message.mentions.members.first()) return;
+  if (message.mentions.members.first().id === message.author.id) return;
+  const time = 50000;
+  Pings.set(`Pinged: ${message.mentions.members.first().id} By ${message.author.id}`, Date.now() + time);
+  setTimeout(() => {
+    Pings.delete(`Pinged: ${message.mentions.members.first().id} By ${message.author.id}`)
+    // console.log(`Deleted Data!`)
+  }, time);
+});
+
+client.on("messageDelete", (message) => {
+  if (!message.mentions.members.first()) return;
+  if (Pings.has(`Pinged: ${message.mentions.members.first().id} By ${message.author.id}`)) {
+    message.channel.send(
+      new MessageEmbed()
+        .setTitle("Ghost Ping Logger")
+        .addField("author", message.author, true)
+        .addField("Content", message.content, true)
+        .setColor("#ee7373")
+        .setTimestamp()
+    )
+  }
+});

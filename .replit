@@ -1,0 +1,4 @@
+## run = "forever start index.js"
+language = "nodejs"
+run = "npx nodemon --harmony-optional-chaining index.js"
+## run = "npx nodemon index.js"
