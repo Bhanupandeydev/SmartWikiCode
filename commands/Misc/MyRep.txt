@@ -1,0 +1,45 @@
+const Discord = require("discord.js")
+const db = require("quick.db")
+module.exports = {
+  name: "myrep", 
+  aliases: ["mythanks"], 
+  description: "display thank count", 
+  hidden: true, 
+run: async (client, message, args) = {    
+  /*
+      var user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.member
+      */
+            let thanks = await db.get(`userthanks_${user.id}`)
+            let thanksl = await db.get(`userthanks_${user.id}`)
+            if(thanks > null) {
+              var userlvel = "New"
+            }
+            if(thanks > 1) {
+              var userlevel = "Level 0"
+            }
+            if(thanks > 10) {
+              var userlevel = "Level 1"
+            }
+            if(thanks > 20) {
+              var userlevel = "Level 2"
+            }
+            if(thanks > 30) {
+              var userlevel = "Level 3"  
+            }
+            if(thanks > 40) {
+              var userlevel = "Level 4"
+            }
+            if(thanks > 50) {
+              var userlevel = "Max"
+            }
+      var userlevel = userlevel;
+            let embed = new Discord.MessageEmbed()
+            .setAuthor(user.username || user.user.username , user.displayAvatarURL() || user.user.displayAvatarURL())
+            .addField(`User Level`, `${userlevel || New}`)
+            .addField(`User Total Thanks`, thanksl || '0', true)
+            .setTimestamp()
+            .setFooter(message.guild.name , message.guild.iconURL())
+            message.channel.send(embed)
+            return;
+          }
+}

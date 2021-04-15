@@ -1,5 +1,6 @@
 const { Client, Message, MessageEmbed } = require("discord.js");
 const config= require("../../config.json")
+const emote = require('../../configs/emotes.json');
 const emotes = require('../../configs/emotes.json');
 
 module.exports = {

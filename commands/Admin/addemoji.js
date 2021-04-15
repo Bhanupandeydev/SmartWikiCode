@@ -7,6 +7,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: 'addemoji',
     category: 'moderation',
+    usage: `<emoji>`,
     description: 'Adds a given Emoji to the server',
 
     /**

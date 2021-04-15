@@ -6,6 +6,7 @@ const emotes = require('../../configs/emotes.json');
 module.exports = {
     name: 'announce',
     description: 'Announce a message to a mentioned channel',
+    usage: `<#channel> <message> -here/-all`,
     category: 'Admin',
     /** 
      * @param {Client} client 

@@ -3,12 +3,12 @@ const config = require("../../config.json")
 const blacklist = require('../../models/blacklist')
 module.exports = {
  name : 'blacklist',
- 
+ OwnerOnly: true,
 /**
 * @param {Message} message
 */
 run : async(client, message, args) => {
-                if(!config.dev.includes(message.author.id)) return message.channel.send("no u")
+                if(!config.dev.includes(message.author.id)) return;
                 const User = message.mentions.members.first() || message.guild.members.cache.get(args[0]) 
                 if(!User) return message.channel.send('User is not valid.')
         

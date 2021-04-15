@@ -3,11 +3,12 @@ const emotes = require('../../configs/emotes.json');
 
 module.exports = {
         name: "reload",
+        OwnerOnly: true,
         description: "Reload command- Dev Only",
         aliases: [`rmod`],
 
     run: async (client, message, args) => {
-      if(!config.dev.includes(message.author.id)) return message.channel.send("no u")
+      if(!config.dev.includes(message.author.id)) return;
 
       let cmdfolder = args[0];
       if(!cmdfolder) return message.channel.send(`${emotes.error} | Provide a command Folder!`)

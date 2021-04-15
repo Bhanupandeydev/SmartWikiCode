@@ -53,8 +53,8 @@ module.exports = {
           
           const url = (res[0].match(/\d{17,19}/)||[])[0];
           const id = res[1];
-    
-          return message.channel.send(
+
+          message.channel.send(
             `Successfully deleted **${count}** messages from this channel!`,
             new Discord.MessageEmbed()
             .setColor('GREY')
@@ -62,7 +62,7 @@ module.exports = {
               `[\`📄 View\`](${url ? `https://txt.discord.website/?txt=${url}/${id}/bulkdlt-${_id}`:''})`,
               `[\`📩 Download\`](${res[0]})`
             ].join('\u2000\u2000•\u2000\u2000'))
-          );
+        )
         })
 },
 };

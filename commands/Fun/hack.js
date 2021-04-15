@@ -1,37 +1,45 @@
-const { MessageEmbed } = require('discord.js');
+///command file make it to your command handler and require it correctly 
+const Discord = require('discord.js');
+const { prefix } = require(`../../config.json`);
+const { sleep } = require('../../sleep')
+
 module.exports = {
-  name: "hack",
-  group: "fun",
-  description: "Hack a person",
+    name: 'hack',
+    aliases: [' '],
+    description: 'hack command',
+    args: true,
+    usage: '<@user>',
+    /** 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {String[]} args 
+     */
     run: async (client, message, args) => {
-      try{
-       let target = message.mentions.members.first();
-
-    if(!target) {
-      return message.channel.send(`**${message.author.username}**, Please mention the person who you want to hack -.-`)
+        const hacked = message.mentions.members.first() || message.guild.members.cache.get(args[0])
+        const genemail = [
+            'noobs@'
+        ]
+        const genending = [
+            'gmail.com'
+        ]
+        const genpass = [
+            '82jfsk9aw1l'
+        ]///just change all of them to what you need 
+        await message.channel.send(`Hacking ${hacked.user.username} now...`)
+        .then(async msg => {
+            await sleep(1500);///you can add more of them
+            await msg.edit(`[▖] Finding discord login... (2fa bypassed)`)
+            await sleep(2000);
+            await msg.edit(`[▘] Found:\n**Email:** \`${genemail}${genending}\`\n**Password:** ${genpass}`)
+            await sleep(2500);
+            await msg.edit(`[▝] Fetching DM's with closest friends (They have no friends)`)
+            await sleep(2000);
+            await msg.edit(`Succesfully hacked ${hacked.user.username}`)
+            await sleep(2000);
+        } )
     }
-    
-    if(target.id === message.author.id) {
-     return message.channel.send(`**${message.author.username}**, You can not hack yourself >;c`)
-    }
-      const msg = await message.channel.send(`Hacking is almost done.`);
-        const age = Math.floor(Math.random() * 100) + 1;
-      const Embed = new MessageEmbed()
-        .setTitle("User hacked")
-        .setDescription(
-          `${target} has been hacked by @${message.author.tag}\n **Information**\n Age: ${age}\n bot: **Yes** `
-        )
-        .setFooter(`Id: ${target.id}`)
-        .setColor('#fb644c');
-      msg.edit(Embed);
-      msg.edit("\u200b");
-
-    } catch (err) {
-      return message.channel.send(`${emotes.error}Oh No Oh NO oH NO NO NO NO NO.....`).then((msg) => {
-          setTimeout(() => {
-              msg.edit(`${emotes.error}An Unexpected Error Occured: **${err}** \nRun \`${config.prefix}links\` to join the support server for support`);
-          }, 3000)
-  })
 }
-    }
-};
+
+
+
+

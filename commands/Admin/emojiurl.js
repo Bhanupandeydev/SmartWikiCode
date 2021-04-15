@@ -9,6 +9,7 @@ const prefix = config.prefix
     clientPermissions: [ 'MANAGE_EMOJIS' ],
     group: 'moderation',
     description: 'Add an emoji to the server using the supplied image URL',
+    usage: "<emoji link>",
     parameters: [ 'Image URL', 'Emoji Name' ],
     get examples(){ return `${this.name} https://some-url/path-to-image.format name_of_emoji`},
     run: (client, message, [url, name] ) => {

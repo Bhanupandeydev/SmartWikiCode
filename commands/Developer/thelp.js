@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const config = require('../../../config.json')
 module.exports = {
     name: "thelp",
-    ownerOnly: true,
+    OwnerOnly: true,
     description: "The help command, what do you expect?",
 
     async run (client, message, args){

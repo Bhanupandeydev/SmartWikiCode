@@ -4,8 +4,9 @@ const config= require("../../config.json")
 const emotes = require('../../configs/emotes.json');
 module.exports = {
     name : 'whitelist',
+    OwnerOnly: true,
     run : async(client, message, args) => {
-        if(!config.dev.includes(message.author.id)) return message.channel.send("no u")
+        if(!config.dev.includes(message.author.id)) return;
         const User = message.mentions.members.first() || message.guild.members.cache.get(args[0]) 
         if(!User) return message.channel.send('User is not valid.')
 

@@ -1,0 +1,33 @@
+const { MessageEmbed } = require('discord.js')
+ client.on('message', async (message) => {
+
+        if (message.author.bot) return;
+
+        const { guild, channel } = message
+
+        if (message.content.startsWith(`https://discord.com/channels/${guild.id}/`)) {
+
+            let channelId = message.content.split("/")[5];
+            let messageId = message.content.split("/")[6];
+            let chan = message.guild.channels.cache.get(channelId);
+
+
+            await chan.messages.fetch({ around: messageId, limit: 1 }).then(messages => {
+                let content = messages.first().content;
+                let username = messages.first().author.username;
+                let AvatarURL = messages.first().author.displayAvatarURL({ dynamic: true });
+                let createdAt = messages.first().createdAt;
+                let timeSent = createdAt.toString().split(' ');
+
+                let embed = new MessageEmbed()
+                    .setAuthor(username, AvatarURL)
+                    .setDescription(content)
+                    .addField('Message Channel', chan)
+                    .addField(`Called by ${message.member.displayName}`, `[Click For Context](${message.content})`)
+                    .setColor(message.guild.me.roles.highest.hexColor)
+                    .setFooter(`Message sent on ${timeSent[0]} ${timeSent[1]} ${timeSent[2]} ${timeSent[3]} | ${timeSent[4]}`)
+                channel.send(embed)
+
+            })
+        }
+    })

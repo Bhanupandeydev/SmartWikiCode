@@ -3,6 +3,7 @@ const db = require("quick.db")
 module.exports = {
       name: 'mods',
       usage: 'mods',
+      guared: true,
       description: 'Displays a list of all current mods.',
       clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS'],
     run : async(client, message, args) => {

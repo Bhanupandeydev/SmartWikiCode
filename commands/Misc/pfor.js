@@ -1,16 +1,20 @@
-  
 const { MessageEmbed } = require('discord.js');
-const config= require("../../config.json")
+const config = require('../../config.json');
 const emotes = require('../../configs/emotes.json');
+const Discord = require('discord.js');
+
 module.exports = {
-  name: 'permissionsfor',
-  aliases: [ 'permsfor', 'perms', 'permissions'],
-  group: 'utility',
-  guildOnly: true,
-  description: 'List the server permissions of mentioned user or provided ID',
-  parameters: [ 'User ID/Mention' ],
-  get examples(){ return [ this.name, ...this.aliases].map(x => x + ' <user>');},
-  run: async(client, message, [member = '']) => {
+	name: 'permissionsfor',
+	aliases: ['permsfor', 'perms', 'permissions'],
+	group: 'utility',
+	guildOnly: true,
+	description: 'List the server permissions of mentioned user or provided ID',
+	parameters: ['User ID/Mention'],
+	get examples() {
+		return [this.name, ...this.aliases].map(x => x + ' <user>');
+	},
+	run: async (client, message, [member = '']) => {
+
      try{
     if (!member.match(/\d{17,19}/)){
       member = message.author.id;
@@ -56,3 +60,5 @@ module.exports = {
 }
   }
 };
+	
+

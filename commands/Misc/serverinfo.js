@@ -23,7 +23,7 @@ module.exports = {
     name: "serverinfo",
     aliases: ["sinfo", "si"],
     category: 'Info',
-    description: "Shows status of users",
+    description: "Shows server information",
 
     /**
      * @param {Client} client
@@ -57,9 +57,9 @@ module.exports = {
             .setThumbnail(icon)
             .addFields(
                 { name: `${emotes.star}Region`, value: `${region[message.guild.region]}`, inline:true },
-                { name: `${emotes.info}Total Users/Bots`, value: `${message.guild.members.cache.size} Users/Bots`, inline: true },
-                { name: `${emotes.users}Users`, value: `${members} Users (${onlineMembers} Online)`, inline: true },
-                { name: `${emotes.Dev}Bots`, value: `${bots} Bots (${onlineBots} Online)`, inline: true },
+                { name: `${emotes.info}Total Users/Bots`, value: `${message.guild.memberCount} Users/Bots`, inline: true },
+                // { name: `${emotes.users}Users`, value: `${members} Members,${message.guild.memberCount}`, inline: true },
+                // { name: `${emotes.Dev}Bots`, value: `${bots} Bots (${onlineBots} Online)`, inline: true },
                 { name: `${emotes.boost}Boosts`, value: `${message.guild.premiumSubscriptionCount} Boosts (Tier ${message.guild.premiumTier})`, inline: true },
                 { name: `${emotes.Channel}Text Channels`, value: `${textChannels}`, inline: true },
                 { name: `${emotes.voice}Voice Channels`, value: `${voiceChannels}`, inline: true },

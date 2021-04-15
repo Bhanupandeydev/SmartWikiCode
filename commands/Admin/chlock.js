@@ -3,7 +3,8 @@ const emotes = require('../../configs/emotes.json');
 const config= require("../../config.json")
 module.exports = {
         name: `lock`,
-        description: `lock channel`,
+        description: `lock a channel`,
+        usage: "",
         aliases: [],
     run: async (client, message, args) => {
         try{

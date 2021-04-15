@@ -2,6 +2,8 @@ const schema = require('../../models/custom-commands');
 
 module.exports = {
     name: 'cc-create',
+    description: "create a custom command in smartwiki",
+    usage: "<cc name> <cc response>",
     guarded: true,
     run: async(client, message, args) => {
         if(!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('You do not have permissions to use this command');

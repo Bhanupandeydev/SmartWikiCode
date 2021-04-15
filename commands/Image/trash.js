@@ -9,7 +9,7 @@ module.exports = {
     let avatar = m.user.displayAvatarURL({
       dynamic: false,
       format: "png",
-    });
+    })
 
     let img = await new DIG.Trash().getImage(avatar, 5);
 

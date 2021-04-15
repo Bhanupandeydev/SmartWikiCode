@@ -100,7 +100,7 @@ module.exports = {
       : "*None*";
     const highestRole = member.roles.highest || "*None*";
     const hoistRole = member.roles.hoist || "*None*";
-    let status = st[member.presence.status];
+    let status = `Disabled This Feature Due To Intents`
 
     const embed = new Discord.MessageEmbed()
       .setTitle(member.user.tag)
@@ -141,16 +141,6 @@ module.exports = {
           inline: true,
         },
         {
-          name: "Custom Status",
-          value: activities.status,
-          inline: true,
-        },
-        {
-          name: " Status",
-          value: `${status}`,
-          inline: true,
-        },
-        {
           name: "🥇Highest Role",
           value: highestRole || "None",
           inline: true,
@@ -158,14 +148,6 @@ module.exports = {
         {
           name: "Hoist Role",
           value: hoistRole || "None",
-          inline: true,
-        },
-        {
-          name: " Activities",
-          value:
-            activities.other && activities.other.length
-              ? activities.other.join("\n")
-              : "*None*",
           inline: true,
         },
         {

@@ -8,10 +8,11 @@ const emotes = require('../../configs/emotes.json');
    module.exports = {
   name: 'eval',
   aliases: [],
+  OwnerOnly: true,
   description: 'Evaluate arbitrary Javascript',
   run: async (client, message, args) => {
      
-    if(!config.dev.includes(message.author.id)) return message.channel.send("no u")
+    if(!config.dev.includes(message.author.id)) return;
       try{
       const code = args.join(' ');
       if(!code) return message.reply(`${emotes.error} || Please give me a query to eval!`);
