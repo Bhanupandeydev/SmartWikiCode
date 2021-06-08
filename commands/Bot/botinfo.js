@@ -48,7 +48,8 @@ module.exports = {
 				.addField('🤖 CPU usage', `\`${percent.toFixed(2)}%\``, true)
 				.addField('🤖 Arch', `\`${os.arch()}\``, true)
 				.addField('💻 Platform', `\`\`${os.platform()}\`\``, true)
-				.addField('API Latency', `${client.ws.ping}ms`);
+				.addField('API Latency', `${client.ws.ping}ms`)
+				.addField('Some Command Credits', `[DarkStudio](https://discord.gg/devs)`)
 			message.channel.send(botinfo);
 		});
 	}

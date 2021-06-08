@@ -27,13 +27,14 @@ module.exports = {
 				Info: '<:SmartInfo:821776609278296135>',
 				Other: '<:SmartUtil:821782674095079455>',
 				Bot: '<:Developer:780277148123398215>',
-				Misc: '<:SmartMisc:821783914091380737>',
+				Util: '<:SmartMisc:821783914091380737>',
 				Backup: '<a:Premium:813261739096408094>',
 				AntiRaid: '<:emoji:810522155028578305>', 
-				Music: "<:049music:826069948102344745>"
-			};
-			readdirSync('./commands/').forEach(dir => {
-				const editedName = `${dirEmojis[dir]} ${dir.toUpperCase()}`;
+				Music: "<:049music:826069948102344745>",
+				Games: "<:Games:802825765728288769>"
+			}
+readdirSync("./commands/").forEach((dir) => {
+  const editedName = `${dirEmojis[dir]} ${dir.toUpperCase()}`;
 				const hiddenC = ['Developer'];
 				if (hiddenC.includes(dir)) return;
 				const commands = readdirSync(`./commands/${dir}/`).filter(file =>

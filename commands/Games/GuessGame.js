@@ -1,13 +1,13 @@
 const { stripIndents } = require('common-tags');
 const request = require('node-superfetch');
-const { shuffle, list } = require('./utility.js');
+const { shuffle, list } = require('../Fun/utility.js');
 const types = ['multiple', 'boolean'];
 const difficulties = ['easy', 'medium', 'hard'];
 const choices = ['A', 'B', 'C', 'D'];
 
 module.exports = {
     name: "quiz",
-    aliases: ["guessgame"],
+    aliases: ["guessgame", "guesstrivia"],
     timeout: 30,
     description: "Pick what type of quiz you want (multiple / boolean); then pick what level of difficulty you want (easy, medium, hard).",
     usage: "<multple/boolean> <easy/medium/hard>",

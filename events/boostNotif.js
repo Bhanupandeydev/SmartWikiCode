@@ -2,15 +2,22 @@ const Discord = require("discord.js");
 const client = require("../index")
 const guildMemberBoost = require("../index");
 const emotes = require("../configs/emotes.json")
+const db = require("quick.db")
 client.on('guildMemberBoost', (member) => {
-     try{
-     const boostmessage = new Discord.MessageEmbed()
+  let b = db.fetch(`boostlogs_${member.guild.id}`) 
+  if (!b) return;
+
+     const embed = new Discord.MessageEmbed()
      .setTitle(`<a:boost:804198262332456971>New Boost!`)
-     .setDescription(`**${member.user.tag}** just boosted ${member.guild.name}, Thanks for Boosting The Server ${member.user}!`)
-     .setColor("#ff1493")
-     .setTimestamp()
-     member.guild.systemChannel.send(boostmessage).catch(() => {} )
-} catch (e) {
-    return 
-  }
-});
+ .setAuthor(`${member.guild.name}`, member.guild.iconURL({dynamic:true}))
+ .setFooter(`By ${client.user.username}`, client.user.avatarURL())
+ .setThumbnail(member.user.avatarURL({dynamic:true}))
+ .setTimestamp()
+ .setColor('ee53de')
+     .setDescription(`<@!${member.user.id}>, thank you for boosting ${member.guild.name}`)
+     var sChannel = member.guild.channels.cache.get(b) 
+     if (!sChannel) return;
+     sChannel.send(embed).catch(() => {} )
+     
+
+})

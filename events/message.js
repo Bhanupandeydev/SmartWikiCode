@@ -9,17 +9,16 @@ const { Collection } = require('discord.js');
 const Timeout = new Collection();
 const ms = require('ms');
 const { MessageEmbed } = require('discord.js');
+const logger = require('../utils/logger');
 const blacklist = require('../models/blacklist');
 const { owners, dblkey } = require('../config.json');
 const db = require('../models/command');
 const qdb = require('quick.db');
 const cooldowns = new Discord.Collection();
 const cc = require('../models/custom-commands');
-const rules = require('quick.db');
 
 const { logs } = require('nekoyasui');
-
-
+const developers = '718164201033564200';
 client.on('message', async message => {
 	if (message.author.bot) return;
 
@@ -34,62 +33,26 @@ client.on('message', async message => {
 			msg.delete({ timeout: 1000 });
 		});
 	}
-	if (!message.content.startsWith(prefix)) return;
-
-	/*=-=-=-=-=-=-=-=-=TOS FEATURE=-=-=-=-=-=-=-=-=-=-=-*/
-	let checkingToS = rules.fetch(`agree_${message.author.id}`);
-	if (checkingToS === null) {
-		let notAgreed = new Discord.MessageEmbed()
-			.setTitle(`${message.client.user.username}'s ToS`)
-			.setColor(`#ee7373`)
+	if (
+		message.content === `<@${client.user.id}>` ||
+		message.content === `<@!${client.user.id}>`
+	) {
+		const mentionres = new Discord.MessageEmbed()
+			.setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
+			.setTitle(`Mention Response`)
+			.setURL('https://dsc.gg/smartwiki')
 			.setDescription(
-				`By using SmartWiki bots features and adding this bot, you are agreeing to be bound by this bot's terms and conditions of use and agree that you are responsible for the agreement with any rules. If you disagree with any of these terms, you are prohibited from accessing this bot.`
-			)
-			// .addField('Links', `${message.client.user.username} has not reviewed all of the displayed content. The prescence of any link does not imply endorsement by SmartWiki. The use of any linked website is at the user's own risk.`)
-			.addField(
-				'Discord ToS',
-				`By using ${
-					message.client.user.username
-				}, you agree that you will not use our bot to distribute products / services that are against [Discord ToS](https://www.discord.com/terms)`
+				`Hey, Im \`SmartWiki\`, my prefix in this guild is \`s!\` \nRun the command \`s!help\` to see a list of available commands!`
 			)
 			.setFooter(
-				'You have 10 seconds to react, if not this proccess will be cancelled'
-			);
-		return message.channel.send(notAgreed).then(async m => {
-			await m.react('819602663967948860');
+				`Total Commands: ${client.commands.size}`,
+				message.guild.iconURL({ dynamic: true })
+			)
 
-			const filter = (reaction, user) => {
-				return (
-					['SmartLike'].includes(reaction.emoji.name) &&
-					user.id === message.author.id
-				);
-			};
-			m.awaitReactions(filter, {
-				max: 1,
-				time: 60000,
-				errors: ['time']
-			}).then(async collected => {
-				const reaction = collected.first();
-				if (reaction.emoji.name === 'SmartLike') {
-					rules.set(`agree_${message.author.id}`, true);
-					m.delete();
-					message.channel.send({
-						embed: {
-							title: 'Success!',
-							description: 'You have complied with SmartWiki(s) rules!',
-							color: `GREEN`,
-							footer: {
-								text: message.client.user.username,
-								icon_url: message.client.user.displayAvatarURL()
-							}
-						}
-					});
-				}
-			});
-		});
+			.setColor('2f3136');
+		message.channel.send(mentionres);
 	}
-
-	/*=-=-=-=-=-=-=-=-=-=-=TOS ENDS HERE-==-=-=-=-=-=-=-=-=-=-=-*/
+	if (!message.content.startsWith(prefix)) return;
 
 	if (!message.guild) return;
 	if (!message.member)
@@ -111,6 +74,8 @@ client.on('message', async message => {
 
 	let command = client.commands.get(cmd);
 	if (!command) command = client.commands.get(client.aliases.get(cmd));
+
+	/*=-=-=-=-=-DID YOU MEAN SYSTEM=-==-=-=-
 	if (!command) {
 		const best = [
 			...client.commands.map(cmd => cmd.name),
@@ -130,6 +95,7 @@ client.on('message', async message => {
 			})
 		);
 	}
+	*/
 	if (command) {
 		/**==============[DISABLED COMMANDS]==============*/
 		const check = await db.findOne({ Guild: message.guild.id });
@@ -195,7 +161,7 @@ client.on('message', async message => {
 					.reply(
 						`${
 							emotes.error
-						}Error: You Don't Have Enough Permissions To Use This Command \n Missing Permissions: \`${
+						}Error: You Don't Have Enough Permissions To Use This Command \nRequired Permissions: \`${
 							command.permissions
 						}\``
 					)
@@ -212,7 +178,7 @@ client.on('message', async message => {
 		guard
 			.setTitle(`${emotes.error}Error: Beta Command!`)
 			.setDescription(
-				`Sorry, This Command Is Currently In Development So It Wont Work.`
+				`Sorry, This Command Is Currently In Development Please try again later!`
 			);
 		if (command.guarded) {
 			return message.reply(guard);
@@ -257,6 +223,15 @@ client.on('message', async message => {
 				);
 
 			command.run(client, message, args);
+
+			logger.info(
+				`${message.content}" (${command.name}) ran by "${
+					message.author.tag
+				}" (${message.author.id}) on guild "${message.guild.name}" (${
+					message.guild.id
+				}) channel "#${message.channel.name}" (${message.channel.id})`,
+				{ label: 'Command' }
+			);
 		});
 	}
 });

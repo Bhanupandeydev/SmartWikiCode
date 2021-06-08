@@ -1,46 +1,43 @@
-const moment = require("moment");
-const chalk = require("chalk");
+const { createLogger, format, transports } = require('winston');
+const { combine, timestamp, label, printf } = format;
+const Discord = require('discord.js');
+const config = require('./../config.json');
+const webhookClient = new Discord.WebhookClient(
+	config.webhook_id,
+	config.webhook_url
+);
+const chalk = require('chalk');
+const online = '<a:online:742802760608645151>';
+const line = '<:MarkLineMid:845019145942990888>';
 
-class Logger {
-    now() {
-        return moment().format("hh:mm:ss a");
-    }
+const myFormat = printf(({ level, message, label, timestamp }) => {
+	webhookClient.send(`${timestamp} [${label}] ${message}`);
+	return `${timestamp} [${level}] [${chalk.cyan(label)}] ${message}`;
+});
 
-    fullDate() {
-        return moment().format("MMMM Do YYYY, h:mm:ss a");
-    }
+const myCustomLevels = {
+	levels: {
+		error: 0,
+		warn: 1,
+		info: 2,
+		http: 3,
+		verbose: 4,
+		debug: 5,
+		silly: 6
+	}
+};
 
-    /**
-     * @param {string} type
-     * @param {string} error
-     */
-    error(type, error) {
-        return console.error(
-            chalk.red(`[${type.toUpperCase()}][${this.now()}]: ${error}`)
-        );
-    }
+const logger = createLogger({
+	levels: myCustomLevels.levels,
+	format: combine(
+		format.colorize(),
+		format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+		myFormat
+	),
+	transports: [
+		new transports.Console(),
+		new transports.File({ filename: './assets/logs/SmartWiki.log' })
+	]
+});
 
-    /**
-     * @param {string} type
-     * @param {string} warning
-     */
-    warn(type, warning) {
-        return console.warn(
-            chalk.yellow(
-                `[WARNING][${type.toUpperCase()}][${this.now()}]: ${warning}`
-            )
-        );
-    }
-
-    /**
-     * @param {string} type
-     * @param {string} message
-     */
-    log(type, message) {
-        return console.log(
-            `[INFO][${type.toUpperCase()}][${this.now()}]: ${message}`
-        );
-    }
-}
-
-module.exports = new Logger();
+module.exports = logger;

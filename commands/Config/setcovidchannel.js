@@ -1,15 +1,19 @@
 const Discord = require('discord.js');
 const autoCovid = require('../../events/autoCovid');
 const covidModel = require('../../models/covid');
+const { dev } = require('../../config.json');
+
 module.exports = {
 	name: 'setcovid',
 	usage: 'setcovid <#channel>',
 	description: 'Set the covid auto posting channel',
 	run: async (client, message, args) => {
-		if (!message.member.hasPermission('ADMINISTRATOR'))
+		if (
+			!message.member.hasPermission('MANAGE_GUILD') &&
+			!dev.includes(message.author.id)
+		)
 			return message.channel.send(
-				`${message.author.tag} You don't have perms to do that.`
-			);
+				'You Do Not Have The Required Permissions! - [MANAGE_GUILD]')	
 
 		const covid = await covidModel.findOne({ guild: message.guild.id });
 		if (!args[0]) {
@@ -63,7 +67,7 @@ module.exports = {
 
 			setInterval(async () => {
 				await autoCovid(client, message.guild.id);
-			}, 300000).catch(e => {});
+			}, 300000)
 		}
 	}
 };

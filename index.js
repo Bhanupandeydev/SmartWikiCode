@@ -1,36 +1,35 @@
 const { Client, Discord, Collection } = require('discord.js');
+const { Intents } = require('discord.js'),
+	client = new Client({
+		fetchAllMembers: false,
+		restTimeOffset: 0,
+		restWsBridgetimeout: 100,
+		disableEveryone: true,
+		ws: {
+			intents: [
+				'GUILDS',
+				'GUILD_MESSAGES',
+				'GUILD_MEMBERS',
+				'DIRECT_MESSAGE_TYPING',
+				'DIRECT_MESSAGE_REACTIONS',
+				'DIRECT_MESSAGES',
+				'GUILD_MESSAGE_TYPING',
+				'GUILD_MESSAGE_REACTIONS',
+				'GUILD_VOICE_STATES',
+				'GUILD_INVITES',
+				'GUILD_WEBHOOKS',
+				'GUILD_INTEGRATIONS',
+				'GUILD_EMOJIS',
+				'GUILD_BANS'
+			]
+		},
+		partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER']
+	});
+
+require('discord-buttons')(client);
 const fs = require('fs');
 const colors = require('colors');
-
-const client = new Client({
-	fetchAllMembers: false,
-	restTimeOffset: 0,
-	restWsBridgetimeout: 100,
-	disableEveryone: true,
-	ws: {
-		intents: [
-			'GUILDS',
-			'GUILD_MESSAGES',
-			'GUILD_MEMBERS',
-			'DIRECT_MESSAGE_TYPING',
-			'DIRECT_MESSAGE_REACTIONS',
-			'DIRECT_MESSAGES',
-			'GUILD_MESSAGE_TYPING',
-			'GUILD_MESSAGE_REACTIONS',
-			'GUILD_VOICE_STATES',
-			'GUILD_INVITES',
-			'GUILD_WEBHOOKS',
-			'GUILD_INTEGRATIONS',
-			'GUILD_EMOJIS',
-			'GUILD_BANS'
-		]
-	},
-	partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER']
-});
-//GUILD_PRESENCES
-
 const mongoose = require('mongoose');
-
 const dbs = require('quick.db');
 const config = require('./config.json');
 const smartestchatbot = require('smartestchatbot');
@@ -38,8 +37,15 @@ const scb = new smartestchatbot.Client();
 const TopGG = require('@top-gg/sdk');
 const AutoPoster = require('topgg-autoposter');
 const logs = require('discord-logs');
+const fetch = require('node-fetch');
 const { sendErrorLog } = require('./utils/functions');
-const nekoyasui = require("nekoyasui");
+logs(client);
+require('./utils/client')(client);
+require('./ExtendedMessage');
+require('./utils/config.js')(client);
+require('./dashboard/server')(client);
+this.configg = require('./data/config');
+/*=-=-=-=-=-=Mongoose=-=-=-=-=-*/
 mongoose.connect(
 	require('./config.json').database,
 	{
@@ -51,77 +57,25 @@ mongoose.connect(
 mongoose.connection.on('connected', () => {
 	console.log('Mongoose has successfully connected!');
 });
-// send msg if successfull connection to mongodb
 mongoose.connection.on('err', err => {
 	console.error(`Mongoose connection error: \n${err.stack}`);
 });
-// send msg if error on connection
 mongoose.connection.on('disconnected', () => {
 	console.warn('Mongoose connection lost');
 });
-//send msg if connection lost to mongodb
-logs(client);
-require('./utils/client')(client);
-require('./ExtendedMessage');
-require('./utils/config.js')(client);
-require('./dashboard/server')(client);
 
-//require('./Anti Raid.js')
-// require("./events/ready.js")(client)
-
-const fetch = require('node-fetch');
+/*=-=-=-=-=-Handling=-=-=-=-=-*/
 client.commands = new Collection();
 client.aliases = new Collection();
 client.categories = fs.readdirSync('./commands/');
+client.logger = require('./utils/logger.js')
 module.exports = client;
 ['command'].forEach(handler => {
 	require(`./handlers/${handler}`)(client);
 });
 
-/*
-const MongoStarboardsManager = require("./modules/sb")
-    this.starboardManager = new MongoStarboardsManager(this);
+/*=-=-=-=-=-ChatBot_Db=-=-=-=-=-*/
 
-*/
-
-/*=-=-=-=-=-=-=-==-=STARBOARD=-=-=-=-=-=-=-=-*/
-/*
-const StarboardsManager = require('discord-starboards');
-const manager = new StarboardsManager(client, {
-    storage: false,
-});
-client.starboardsManager = manager;
-manager.on('starboardCreate', (data) => {
-    const channel = client.channels.cache.get(data.channelID);
-    channel.send(`The ${channel} channel is now a starboard!`);
-});
-
-manager.on('starboardDelete', (data) => {
-    const channel = client.channels.cache.get(data.channelID);
-    if (channel) channel.send(`Starboard deleted ! ChannelID: ${data.channelID}`);
-});
-
-manager.on('starboardReactionNsfw', (emoji, message, user) => {
-    message.channel.send(`${user.username}, you cannot add messages from an nsfw channel to the starboard.`)
-});
-
-manager.on('starboardNoSelfStar', (emoji, message, user) => {
-    message.channel.send(`${user.username}, you cannot star your own messages.`)
-});
-
-manager.on('starboardNoStarBot', (emoji, message, user) => {
-    message.channel.send(`${user.username}, you cannot star bot messages.`)
-});
-
-manager.on('starboardAlreadyStarred', (emoji, message, user) => {
-    message.channel.send(`${user.username}, this message is already in the starboard.`)
-});
-
-manager.on('starboardNoEmptyMsg', (emoji, message, user) => {
-    message.channel.send(`${user.username}, you cannot star an empty message.`)
-});
-
-*/
 client.on('message', async message => {
 	try {
 		let channel = await dbs.get(`chatbot_${message.guild.id}`);
@@ -157,6 +111,26 @@ client.on('message', async message => {
 	}
 });
 
+const { CronJob } = require('cron');
+const Enmap = require('enmap');
+
+client.joins = new Enmap({ name: 'joins', autoFetch: true, fetchAll: true });
+
+new CronJob(
+	'0 12 * * Sun',
+	() => {
+		client.joins.clear();
+	},
+	null,
+	true,
+	'America/Los_Angeles'
+);
+
+client
+	.on('disconnect', () => client.logger.warn('Bot is disconnecting...'))
+	.on('reconnecting', () => client.logger.log('Bot reconnecting...'))
+	.on('error', e => client.logger.error(e))
+	.on('warn', info => client.logger.warn(info));
 
 process.on('uncaughtExceptionMonitor', error =>
 	sendErrorLog(client, error, 'error')
@@ -172,7 +146,9 @@ client.login(config.smartwiksi).then(() => {
 		const ap = AutoPoster(config.dblkey, client);
 
 		ap.on('posted', () => {
-			console.log('\n=-=-=-=-=-=-=-=-=-=-=-=-=\nposted stats on top.gg\n=-=-=-=-=-=-=-=-=-=-=-=-=');
+			console.log(
+				'\n=-=-=-=-=-=-=-=-=-=-=-=-=\nposted stats on top.gg\n=-=-=-=-=-=-=-=-=-=-=-=-='
+			);
 		});
 	}
-});
+})

@@ -7,6 +7,8 @@ const autoCovid = require('./autoCovid');
 const pingChecker = require('./pingChecker');
 const icon = '<a:Restart:809416004677533706>';
 const message = `${icon} \`[ v2.1.0 ]\` SmartWiki **Restarted**`;
+const db = require('quick.db');
+const got = require('got');
 client.on('ready', async pp => {
 	console.clear();
 
@@ -30,7 +32,6 @@ client.on('ready', async pp => {
 			client.guilds.cache.size
 		} guilds.\n=-=-=-=-==-==-x_x-=-==-=-=-=-=-=-=-=`
 	);
-
 	const embed = new MessageEmbed()
 		.setTitle(message)
 		.setColor('#f1637a')
@@ -67,4 +68,56 @@ client.on('ready', async pp => {
 		const status = statuses[Math.floor(Math.random() * statuses.length)];
 		client.user.setActivity(status, { type: 'WATCHING' });
 	}, 60000);
-});
+
+	setInterval(() => {
+		client.channels.cache
+			.get('844608871112638464')
+			.setName(`🧭︱Ping: ${client.ws.ping}ms`);
+	}, 99199);
+
+	setInterval(async function() {
+		let msg = await client.channels.cache
+			.get('811508371521404988')
+			.messages.fetch('844958483454492792');
+		let stafflist = new MessageEmbed()
+			.setColor('RED')
+			.setTitle('Live Statistics')
+			.setDescription([
+				`Guilds: \`${client.guilds.cache.size}\``,
+				`Users: \`${e}\``,
+				`Channels: \`${client.channels.cache.size}\``
+			]);
+		msg.edit(stafflist);
+	}, 100000);
+})
+	client.guilds.cache.forEach(g => {
+		setInterval(() => {
+			let dbauto = db.fetch(`auto-meme_${g.id}`);
+			if (!dbauto) return;
+
+			got('https://www.reddit.com/r/memes/random/.json').then(res => {
+				let content = JSON.parse(res.body);
+
+				const embed = new MessageEmbed()
+
+					.setTitle(`${content[0].data.children[0].data.title}`)
+					.setURL(
+						`https://reddit.com${content[0].data.children[0].data.permalink}`
+					)
+					.setImage(content[0].data.children[0].data.url)
+
+					.setColor('RANDOM')
+					.setFooter(
+						`👍 ${content[0].data.children[0].data.ups}  👎 ${
+							content[0].data.children[0].data.downs
+						}  💬${content[0].data.children[0].data.num_comments}`
+					);
+
+				const sChannel = client.channels.cache.get(dbauto);
+
+				if (!sChannel) return;
+
+				sChannel.send(embed);
+			});
+		}, 100000);
+	})

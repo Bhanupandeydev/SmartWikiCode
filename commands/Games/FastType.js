@@ -12,8 +12,8 @@ module.exports = {
 			winMessage: 'Congrats guess you won!', //message sent when user types perfectly
 			sentence: txtgen.sentence(), //sentence-to-be-typed
 			loseMessage: 'Aw man, you suck at this you Lose!', //message sent when user misspell it
-			time: 50000, //time that user has to type in ms
-			startMessage: 'type out the word given below' //message sent when user starts playing
+			time: 50000,
+			startMessage: 'type out the words given below'
 		});
 		game.start();
 	}
