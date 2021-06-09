@@ -21,6 +21,7 @@ Our Discord Template: https://discord.new/cvp5DwebMRfK
 > ⭐ Utility 
 
 > ⭐ Information
+
 > ⭐ Games
 
 > ⭐ Memes
