@@ -43,7 +43,6 @@ logs(client);
 require('./utils/client')(client);
 require('./ExtendedMessage');
 require('./utils/config.js')(client);
-require('./dashboard/server')(client);
 this.configg = require('./data/config');
 /*=-=-=-=-=-=Mongoose=-=-=-=-=-*/
 mongoose.connect(
