@@ -1,7 +1,9 @@
-**SmartWiki**
+# SmartWiki
+
 A multipurpose open sourced discord bot
 
-**Links**
+## Links
+
 invite smartwiki: https://dsc.gg/invitesmart
 
 SmartWiki support: https://dsc.gg/smartwiki
