@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'connect4',
 	aliases: ['4connect'],
@@ -71,7 +72,7 @@ module.exports = {
 						dynamic: true
 					})
 				)
-				.setColor(bot.color)
+				.setColor('BLURPLE')
 				.setDescription(displayBoard(board))
 				.setFooter(
 					`🔴 ${challenger.user.tag}\n🟡 ${opponent.user.tag}`,
@@ -338,7 +339,7 @@ module.exports = {
 										format: 'png'
 									})
 								)
-								.setColor(bot.color)
+								.setColor('BLURPLE')
 								.setDescription(displayBoard(board))
 								.setFooter(
 									`🔴 ${challenger.user.tag}\n🟡 ${opponent.user.tag}`,
@@ -361,7 +362,7 @@ module.exports = {
 								dynamic: true
 							})
 						)
-						.setColor(bot.color)
+						.setColor('BLURPLE')
 						.setDescription(displayBoard(board))
 						.setFooter(
 							`🔴 ${challenger.user.tag}\n🟡 ${opponent.user.tag}`,
